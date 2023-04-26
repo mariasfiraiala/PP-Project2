@@ -124,9 +124,12 @@ dec bits = case bits of
     197
 -}
 add :: BinaryNumber -> BinaryNumber -> BinaryNumber
-add bits1 bits2 = toBinary (dec1 + dec2) where
-    dec1 = toDecimal $ take 100 bits1
-    dec2 = toDecimal $ take 100 bits2
+add bits1 bits2 = snd $ mapAccumL addBit 0 $ zip bits1 bits2 where
+        addBit carry bitsPair = case bitsPair of
+            (0, 0) -> (0, carry)
+            (0, 1) -> (carry, 1 - carry)
+            (1, 0) -> (carry, 1 - carry)
+            (1, 1) -> (1, carry)
 
 {-
     *** TODO ***
