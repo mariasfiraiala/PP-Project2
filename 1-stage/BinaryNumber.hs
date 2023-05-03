@@ -51,7 +51,7 @@ toDecimal =  foldl (\acc xls -> 2 * acc + xls) 0 . reverse
     [0,1,1,0,0,0,0,0,0,0]
 -}
 toBinary :: Int -> BinaryNumber
-toBinary = unfoldr (\x -> Just $ swap $ divMod x 2)
+toBinary = unfoldr (Just . swap . (`divMod` 2))
 
 {-
     *** TODO ***
