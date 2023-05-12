@@ -204,8 +204,8 @@ findMin heap@(BinomialHeap s t) = case list of
     [(1,'a'),(2,'b'),(3,'z'),(4,'z')]
 -}
 zipExtend :: a -> b -> [a] -> [b] -> [(a, b)]
-zipExtend a' _  [] bs = map (a',) bs
-zipExtend _  b' as [] = map (, b') as
+zipExtend a' _  [] bs = zip (repeat a') bs
+zipExtend _  b' as [] = zip as (repeat b')
 zipExtend a' b' (a : as) (b : bs) = (a, b) : zipExtend a' b' as bs
 
 {-
@@ -285,15 +285,14 @@ merge heap1@(BinomialHeap s1 t1) heap2@(BinomialHeap s2 t2) = BinomialHeap (s1 +
     [(1,[0,2,3]),(2,[1,0,3]),(3,[1,2])]  -- fără 0 în ultima listă
 -}
 
-isolateAux :: a -> [a] -> [[a]]
-isolateAux placeHolder (x:xs) = case xs of
-  [] -> [l]
-  _ -> (placeHolder:xs) : map (x:) (isolateAux placeHolder xs)
-  where
-    l = init (x:xs)
 
 isolate :: a -> [a] -> [(a, [a])]
 isolate placeHolder list = zip list $ isolateAux placeHolder list
+    where
+        isolateAux :: a -> [a] -> [[a]]
+        isolateAux placeHolder (x:xs) = case xs of
+            [] -> [init (x:xs)]
+            _ -> (placeHolder:xs) : map (x:) (isolateAux placeHolder xs)
 
 {-
     *** TODO ***
